@@ -5,6 +5,7 @@ requirements:
 - pytube
 - pysimplegui
 - python 3.10
+- moviepy
 
 
 # step 1
@@ -16,6 +17,7 @@ run the installer, making sure you connect it to PATH and enable `pip`
 open your terminal
 run `pip3 install pytube`
 run `pip3 install PySimpleGUI`
+run `pip3 install moviepy`
 
 # step 3
 run the python file in a folder to collect output.
