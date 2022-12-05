@@ -1,14 +1,18 @@
 import PySimpleGUI as sg
 import os
 from pytube import YouTube
+from moviepy.audio.io.AudioFileClip import AudioFileClip
 
 
 def progress_check(stream, chunk, bytes_remaining):
-    window['-DOWNLOADPROGRESS-'].update(100 - round(bytes_remaining / stream.filesize * 100))
+    if chunk:
+        window['-DOWNLOADPROGRESS-'].update(100 - round(bytes_remaining / stream.filesize * 100))
 
 
 def on_complete(stream, file_path):
-    window['-DOWNLOADPROGRESS-'].update(0)
+    if stream:
+        print(f'YouTube - saved to {file_path}')
+        window['-DOWNLOADPROGRESS-'].update(0)
 
 
 sg.theme('Darkred1')
@@ -67,6 +71,7 @@ while True:
         window['-AUDIOSIZE-'].update(f'{round(video_object.streams.get_audio_only().filesize / 1048576, 1)} MB')
 
     if event == '-BEST-':
+        print("Downloading media...")
         video_object.streams.get_highest_resolution().download()
 
     if event == '-WORST-':
@@ -74,8 +79,9 @@ while True:
 
     if event == '-AUDIO-':
         downloaded_file = video_object.streams.get_audio_only().download()
-        base, ext = os.path.splitext(downloaded_file)
-        new_file = base + '.mp3'
-        os.rename(downloaded_file, new_file)
+        clip = AudioFileClip(downloaded_file)
+        clip.write_audiofile(downloaded_file.replace(".mp4", ".mp3"))
+        clip.close()
+        os.remove(downloaded_file)
 
 window.close()
