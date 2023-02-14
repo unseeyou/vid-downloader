@@ -7,10 +7,11 @@ requirements:
 - python 3.8 +
 - moviepy
 
+__steps for newbies:__
 
 # step 1
 go to python.org
-download the python 3.10 installer
+download the python 3.11 installer
 run the installer, making sure you connect it to PATH and enable `pip`
 
 # step 2
