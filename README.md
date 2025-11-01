@@ -2,10 +2,11 @@
 it downloads videos and audio from yt vids once you give it the link
 
 requirements:
-- pytube
+- pytubefix
 - pysimplegui
 - python 3.8 +
 - moviepy
+- [ffmpeg](https://www.ffmpeg.org/download.html) 
 
 __steps for newbies:__
 
