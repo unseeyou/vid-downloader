@@ -1,7 +1,9 @@
-import PySimpleGUI as sg
+import FreeSimpleGUI as sg
 import os
-from pytube import YouTube
+from pytubefix import YouTube
 from moviepy.audio.io.AudioFileClip import AudioFileClip
+from mutagen.easyid3 import EasyID3
+import subprocess
 
 
 def progress_check(stream, chunk, bytes_remaining):
@@ -50,7 +52,11 @@ while True:
     if event == sg.WIN_CLOSED:
         break
     if event == 'submit':
-        video_object = YouTube(values['-INPUT-'], on_progress_callback=progress_check, on_complete_callback=on_complete)
+        video_object = YouTube(
+            values["-INPUT-"],
+            on_progress_callback=progress_check,
+            on_complete_callback=on_complete,
+        )
         window.close()
 
         # main window info setup
@@ -80,8 +86,18 @@ while True:
     if event == '-AUDIO-':
         downloaded_file = video_object.streams.get_audio_only().download()
         clip = AudioFileClip(downloaded_file)
-        clip.write_audiofile(downloaded_file.replace(".mp4", ".mp3"))
+        new_fp = downloaded_file.replace(downloaded_file.split(".")[-1], "mp3")
+        clip.write_audiofile(new_fp)
         clip.close()
         os.remove(downloaded_file)
+        audio_file = EasyID3(new_fp)
+        audio_file["title"] = new_fp.removesuffix(".mp3").split("\\")[-1]
+        audio_file["artist"] = video_object.author
+        audio_file.save()
+        input_file = new_fp
+        output_file = new_fp.replace(new_fp.split(".")[-1], "ogg")
+        subprocess.call(["ffmpeg", "-i", input_file, output_file], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        print("Conversion to .ogg Done!")
+
 
 window.close()
