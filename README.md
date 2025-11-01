@@ -12,7 +12,7 @@ __steps for newbies:__
 
 # step 1
 go to python.org
-download the python 3.11 installer
+download the python 3.12.X installer
 run the installer, making sure you connect it to PATH and enable `pip`
 
 # step 2
